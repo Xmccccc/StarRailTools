@@ -1,38 +1,66 @@
+import os
+import json
 import tkinter as tk
 
 
-class FrameTools(tk.Frame):
+class FrameBase(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.name = "功能"
         self.parent = parent
-        # button
-        tk.Button(self, text="锄地", command=lambda: self.show_frame_callback("FrameMapClean"),
-                  width=8, height=1, font=('Georgia', 14)).grid(row=0, column=0, padx=50, pady=50)
-        tk.Button(self, text="剧情", command=lambda: print("1"),
-                  width=8, height=1, font=('Georgia', 14)).grid(row=0, column=1, padx=50, pady=50)
-        tk.Button(self, text="模拟宇宙", command=lambda: print("2"),
-                  width=8, height=1, font=('Georgia', 14)).grid(row=0, column=2, padx=50, pady=50)
-        tk.Button(self, text="忘却之庭", command=lambda: print("3"),
-                  width=8, height=1, font=('Georgia', 14)).grid(row=0, column=3, padx=50, pady=50)
+        self.name = 'none'  # 进入此界面的按钮文本
 
-        tk.Button(self, text="全部执行", command=lambda: print("4"),
-                  width=8, height=1, font=('Georgia', 14)).grid(row=1, column=0, padx=50, pady=50)
-        tk.Button(self, text="选择执行", command=lambda: print("5"),
-                  width=8, height=1, font=('Georgia', 14)).grid(row=1, column=1, padx=50, pady=50)
+        self.font = self.parent.cfg["font"]
+        self.font_size = self.parent.cfg["font_size"]
+
+    def show_frame_callback(self, fc):  # fc: frame class
+        self.parent.show_frame(fc)
+
+
+class FrameTools(FrameBase):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.name = self.parent.text["function"]  # 进入此界面的按钮文本
+        self.buttons = []
+
+        # button info
+        buttons_info = [
+            (FrameDig, 0, 0),
+            (FrameStory, 0, 1),
+            (FrameSimulatedUniverse, 0, 2),
+            (FrameForgottenHall, 0, 3),
+            (FrameDig, 1, 0),
+            (FrameDig, 1, 1),
+        ]
+
+        # button
+        for frame_cls, row, col in buttons_info:  # fc: frame class
+            btn = tk.Button(
+                self,
+                text=frame_cls(parent).name,
+                command=lambda fc=frame_cls: self.show_frame_callback(fc),
+                # bg='#2d2d2d',
+                # fg='white',
+                # activebackground='#404040',
+                # padx=8,
+                # pady=6,
+                width=8,
+                height=1,
+                font=(self.font, self.font_size))  # 微软雅黑  Georgia  14
+            btn.grid(row=row, column=col, padx=20, pady=20)
+            self.buttons.append(btn)
 
         # label
         # label01 = tk.Label(self, text="功能界面", font=('Georgia', 14))
         # label01.grid()
 
-    def show_frame_callback(self, frame_name):
-        self.parent.show_frame(frame_name)
 
-
-class FrameTheme(tk.Frame):
+class FrameTheme(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.name = "主题"
+        self.parent = parent
+        self.name = self.parent.text["theme"]  # 进入此界面的按钮文本
+
         # button
         button01 = tk.Button(self, text="主题")
         button01.pack()
@@ -42,10 +70,12 @@ class FrameTheme(tk.Frame):
         label01.pack()
 
 
-class FrameSetting(tk.Frame):
+class FrameSetting(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.name = "设置"
+        self.parent = parent
+        self.name = self.parent.text["settings"]  # 进入此界面的按钮文本
+
         # button
         button01 = tk.Button(self, text="设置")
         button01.pack()
@@ -55,10 +85,12 @@ class FrameSetting(tk.Frame):
         label01.pack()
 
 
-class FrameAbout(tk.Frame):
+class FrameAbout(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.name = "关于"
+        self.parent = parent
+        self.name = self.parent.text["about"]  # 进入此界面的按钮文本
+
         # button
         button01 = tk.Button(self, text="关于")
         button01.pack()
@@ -68,25 +100,49 @@ class FrameAbout(tk.Frame):
         label01.pack()
 
 
-class FrameCleanMonster(tk.Frame):
+class FrameDig(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.name = "锄地设置界面"
+        self.parent = parent
+        self.name = self.parent.text["dig"]  # 锄地
+
         # label
         tk.Label(self, text="地图选择", font=('Georgia', 14)).grid(row=0, column=0, padx=20, pady=10)
         # button
         tk.Button(self, text="锄地").grid(row=1, column=0, padx=20, pady=10)
 
 
-left_button_dict = {"FrameTools": FrameTools,
-                    "FrameTheme": FrameTheme,
-                    "FrameSetting": FrameSetting,
-                    "FrameAbout": FrameAbout,
-                    }
+class FrameStory(FrameBase):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.name = self.parent.text["story"]  # 剧情
 
-frames_dict = {"FrameTools": FrameTools,
-               "FrameTheme": FrameTheme,
-               "FrameSetting": FrameSetting,
-               "FrameAbout": FrameAbout,
-               "FrameMapClean": FrameCleanMonster,
-               }
+        # button info
+
+        tk.Button(self, text=self.name, command=lambda: print(self.name),
+                  width=8, height=1, font=('Georgia', 14)).grid()
+
+
+class FrameSimulatedUniverse(FrameBase):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.name = self.parent.text["simulated_universe"]  # 模拟宇宙
+
+        # button info
+
+        tk.Button(self, text=self.name, command=lambda: print(self.name),
+                  width=8, height=1, font=('Georgia', 14)).grid()
+
+
+class FrameForgottenHall(FrameBase):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.name = self.parent.text["forgotten_hall"]  # 忘却之庭
+
+        # button info
+
+        tk.Button(self, text=self.name, command=lambda: print(self.name),
+                  width=8, height=1, font=('Georgia', 14)).grid()

@@ -1,58 +1,65 @@
 # main 主程序入口
-# import json
+import json
 import tkinter as tk
 
-from leftmenu import LeftMenu
+import info
 import frames
+from leftmenu import LeftMenu
 
 
 class Tools(tk.Tk):
     def __init__(self):
         super().__init__()
+        self.left_menu_list = info.left_menu_list
+        self.fc_list = info.fc_list
 
+        self.cfg_path = 'cfg\\config.json'
+        self.cfg = 'none'
+        self.language = 'zh'
+        self.text = {}  # 所有文本
         self.title("StarRailTools V0.1")
+        self.geometry(f"800x600+100+100")
+        self._load_cfg()  # 软件配置加载
+        # self.save_cfg()  # 软件配置保存
 
-        self.position = 'none'  # 当前位置
-        self.energy = 0  # 能量、体力
-        self.stored_energy = 0  # 储存能量、储存体力
-        self.money = 0  # 钱、金币
-
-        self.set_windows_position()  # 窗口
-        self.left_button_dict = frames.left_button_dict
-        self.frames_dict = frames.frames_dict
+        self.left_menu = LeftMenu(self, self.left_menu_list)  # 左侧栏
+        self.current_frame = None
         self.frames = {}
-        self.create_frames()  # 界面
-        LeftMenu(self, self.left_button_dict)  # 左侧栏
+        self._create_frames()  # 界面
+        self.show_frame(self.fc_list[0])  # 初始界面
 
-    def set_windows_position(self):
-        # 获取屏幕尺寸
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
+        self.character = info.CharacterInfo()  # 角色状态
 
-        # 设置窗口大小为屏幕的70%（可根据需求调整比例）
-        window_width = int(screen_width * 0.7)
-        window_height = int(screen_height * 0.7)
+    def _load_cfg(self):
+        # load cfg
+        with open(self.cfg_path, 'r') as file:
+            self.cfg = json.load(file)
 
-        # 计算居中坐标
-        x = (screen_width - window_width) // 2
-        y = (screen_height - window_height) // 2 - 30
+        # language text extraction
+        self.language = self.cfg['language']
+        path = f"cfg\\language\\{self.language}.json"
+        with open(path, 'r') as file:
+            self.text = json.load(file)
+        # title
+        self.title(self.cfg['title'])
+        # geometry
+        self.geometry(f"{self.cfg['width']}x{self.cfg['height']}+{self.cfg['x']}+{self.cfg['y']}")
 
-        # 设置窗口位置和尺寸
-        self.geometry(f"{window_width}x{window_height}+{x}+{y}")
+    def save_cfg(self):
+        pass
 
-    def create_frames(self):
+    def _create_frames(self):
         # 创建
-        for frame_name, frame_class in self.frames_dict.items():
-            self.frames[frame_name] = frame_class(self)
-        # 显示
-        self.frames['FrameTools'].pack(side='right', fill='both', expand=True)
+        for frame_cls in self.fc_list:
+            self.frames[frame_cls] = frame_cls(self)
+            self.frames[frame_cls].pack_forget()  # 初始隐藏
 
-    def show_frame(self, frame_name):
-        # 隐藏
-        for frame in self.frames.values():
-            frame.pack_forget()
-        # 显示
-        self.frames[frame_name].pack(side='right', fill='both', expand=True)
+    def show_frame(self, fc):  # fc: frame class
+        if self.current_frame:
+            self.current_frame.pack_forget()
+
+        self.current_frame = self.frames[fc]
+        self.current_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 
 if __name__ == "__main__":
