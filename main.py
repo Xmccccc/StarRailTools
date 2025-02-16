@@ -1,9 +1,11 @@
 # main 主程序入口
-import json
+import os
+import time
 import tkinter as tk
 
-import info
 import frames
+import info
+import utils
 from leftmenu import LeftMenu
 
 
@@ -14,13 +16,14 @@ class Tools(tk.Tk):
         self.fc_list = info.fc_list
 
         self.cfg_path = 'cfg\\config.json'
-        self.cfg = 'none'
-        self.language = 'zh'
-        self.text = {}  # 所有文本
-        self.title("StarRailTools V0.1")
-        self.geometry(f"800x600+100+100")
+        self.log_file_name = time.strftime("%Y_%m_%d_%H_%M", time.localtime())
+
         self._load_cfg()  # 软件配置加载
-        # self.save_cfg()  # 软件配置保存
+        utils.text_save(f'logs\\{self.log_file_name}.txt', '程序启动')
+
+        self.intf_mgr = info.InterfaceManage(self)  # 游戏界面管理类
+        self.intf_mgr.load_maps()
+        self.character = info.Character()  # 角色状态
 
         self.left_menu = LeftMenu(self, self.left_menu_list)  # 左侧栏
         self.current_frame = None
@@ -28,22 +31,24 @@ class Tools(tk.Tk):
         self._create_frames()  # 界面
         self.show_frame(self.fc_list[0])  # 初始界面
 
-        self.character = info.CharacterInfo()  # 角色状态
+        # self.save_cfg()  # 软件配置保存
 
     def _load_cfg(self):
-        # load cfg
-        with open(self.cfg_path, 'r') as file:
-            self.cfg = json.load(file)
+        # cfg  配置参数等
+        self.cfg = utils.load_json_file(self.cfg_path)
 
-        # language text extraction
+        # language  语言类型
         self.language = self.cfg['language']
-        path = f"cfg\\language\\{self.language}.json"
-        with open(path, 'r') as file:
-            self.text = json.load(file)
-        # title
+        # text  所有文本
+        self.text = utils.load_json_file(self.cfg['paths'][self.language])
+        # title  标题
         self.title(self.cfg['title'])
-        # geometry
+        # geometry  窗口大小
         self.geometry(f"{self.cfg['width']}x{self.cfg['height']}+{self.cfg['x']}+{self.cfg['y']}")
+        # resizable
+        self.resizable(width=self.cfg['resizable_w'], height=self.cfg['resizable_h'])
+        # ico
+        self.iconbitmap(self.cfg['paths']['ico'])
 
     def save_cfg(self):
         pass
@@ -61,7 +66,23 @@ class Tools(tk.Tk):
         self.current_frame = self.frames[fc]
         self.current_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
+    def check_cfg(self):
+        # 游戏路径检测
+        pass
+
+    def launch_scripts(self, task, scripts):
+        # self.show_frame(frames.FrameRunningInfo)
+        # self.current_frame.minimize_launch()
+        # for script in scripts:
+        #     script()
+        pass
+
+
+def end_sign():
+    pass
+
 
 if __name__ == "__main__":
+    # utils.require_admin()
     tools = Tools()
     tools.mainloop()

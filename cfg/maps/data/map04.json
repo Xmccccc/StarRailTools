@@ -1,0 +1,334 @@
+{
+     "0401": {
+          "name_zh": "\u767d\u65e5\u68a6\u9152\u5e97\u73b0\u5b9e",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0401",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "3": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0402": {
+          "name_zh": "\u9ec4\u91d1\u7684\u65f6\u523b",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0402",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "3": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0403": {
+          "name_zh": "\u7b51\u68a6\u8fb9\u5883",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0403",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": null
+     },
+     "0404": {
+          "name_zh": "\u7a1a\u5b50\u7684\u68a6",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0404",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": null
+     },
+     "0405": {
+          "name_zh": "\u767d\u65e5\u68a6\u9152\u5e97\u68a6\u5883",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0405",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "3": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0406": {
+          "name_zh": "\u671d\u9732\u516c\u9986",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0406",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0407": {
+          "name_zh": "\u514b\u52b3\u53ef\u5f71\u89c6\u4e50\u56ed",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0407",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0408": {
+          "name_zh": "\u6d41\u68a6\u7901",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0408",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0409": {
+          "name_zh": "\u82cf\u4e50\u8fbe\u70ed\u7802\u6d77\u9009\u4f1a\u573a",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0409",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": null
+     },
+     "0410": {
+          "name_zh": "\u5339\u8bfa\u5eb7\u5c3c\u5927\u5267\u9662",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0410",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": null
+     },
+     "0411": {
+          "name_zh": "\u6656\u957f\u77f3\u53f7",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0411",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "-1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0412": {
+          "name_zh": "\u5339\u8bfa\u5eb7\u5c3c\u6298\u7eb8\u5927\u5b66\u5b66\u9662",
+          "parent_map_name_zh": "\u5339\u8bfa\u5eb7\u5c3c",
+          "id": "0412",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "3": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     }
+}

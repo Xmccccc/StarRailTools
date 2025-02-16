@@ -1,13 +1,18 @@
 {
      "function": "function",
-     "theme": "Theme",
-     "settings": "Settings",
-     "about": "About",
      "dig": "Dig",
      "story": "Story",
      "simulated_universe": "Simulated Universe",
      "forgotten_hall": "Forgotten Hall",
      "run_all": "Run All",
      "run_selected": "Run Selected",
-     "map_choice": "Map Choice"
+     "theme": "Theme",
+     "settings": "Settings",
+     "about": "About",
+     "map_choice": "Map Choice",
+     "running_info": "Running Info",
+     "running": "running",
+     "no_running": "no_running",
+     "launch_T": "Launch Failed",
+     "launch_F": "Launch Successfully"
 }

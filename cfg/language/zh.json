@@ -1,13 +1,21 @@
 {
      "function": "\u529f\u80fd",
-     "theme": "\u4e3b\u9898",
-     "settings": "\u8bbe\u7f6e",
-     "about": "\u5173\u4e8e",
      "dig": "\u9504\u5730",
      "story": "\u5267\u60c5",
      "simulated_universe": "\u6a21\u62df\u5b87\u5b99",
      "forgotten_hall": "\u5fd8\u5374\u4e4b\u5ead",
      "run_all": "\u5168\u90e8\u6267\u884c",
      "run_selected": "\u9009\u62e9\u6267\u884c",
-     "map_choice": "\u5730\u56fe\u9009\u62e9"
+     "theme": "\u4e3b\u9898",
+     "settings": "\u8bbe\u7f6e",
+     "about": "\u5173\u4e8e",
+     "map_choice": "\u5730\u56fe\u9009\u62e9",
+     "start": "\u542f\u52a8",
+     "running_info": "\u8fd0\u884c\u4fe1\u606f",
+     "running": "\u7a0b\u5e8f\u8fd0\u884c\u4e2d...",
+     "no_running": "\u7a0b\u5e8f\u672a\u542f\u52a8...",
+     "launch_S": "\u7a0b\u5e8f\u542f\u52a8\u6210\u529f...",
+     "launch_F": "\u7a0b\u5e8f\u542f\u52a8\u5931\u8d25...",
+     "minimize_Run": "\u7a0b\u5e8f\u6700\u5c0f\u5316\u4e2d...",
+     "minimize_S": "\u7a0b\u5e8f\u6700\u5c0f\u5316\u6210\u529f..."
 }

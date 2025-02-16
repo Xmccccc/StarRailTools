@@ -1,155 +1,110 @@
 import tkinter as tk
 from tkinter import ttk
 
+# 定义常量，用于表示选中与未选中状态
+CHECKED = "☑"
+UNCHECKED = "☐"
 
-class Tools(tk.Tk):
-    def __init__(self):
-        super().__init__()
 
-        # 初始化窗口
-        self._init_window()
+class NavigationPanel:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("导航目录")
 
-        # 创建左侧菜单
-        self._create_menu()
+        # 设置字体大小和样式
+        self.set_style()
 
-        # 创建内容区域
-        self._create_content_area()
-
-        # 初始化其他属性
-        self.position = 'none'
-        self.energy = 0
-        self.stored_energy = 0
-        self.money = 0
-
-    def _init_window(self):
-        """初始化窗口尺寸和位置"""
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        window_width = int(screen_width * 0.6)
-        window_height = int(screen_height * 0.6)
-        x = (screen_width - window_width) // 2
-        y = (screen_height - window_height) // 2
-        self.geometry(f"{window_width}x{window_height}+{x}+{y}")
-        self.resizable(True, True)
-        self.title("StarRailTools v0.1")
-
-    def _create_menu(self):
-        """创建左侧菜单栏"""
-        # 菜单容器
-        self.menu_frame = tk.Frame(
-            self,
-            bg="#2d2d2d",  # 深灰背景色
-            width=150,  # 固定宽度
-            relief=tk.FLAT
+        # 创建Treeview组件
+        self.tree = ttk.Treeview(
+            self.root,
+            columns=("status",),
+            show="tree headings",
+            selectmode="none"
         )
-        self.menu_frame.pack(side=tk.LEFT, fill=tk.Y)
 
-        # 菜单项配置
-        menu_items = [
-            {"text": "状态监控", "command": self.show_status},
-            {"text": "能量管理", "command": self.show_energy},
-            {"text": "金币统计", "command": self.show_money},
-            {"text": "设置", "command": self.show_settings}
-        ]
+        # 配置列参数
+        self.tree.heading("#0", text="文档结构")
+        self.tree.heading("status", text="状态")
+        self.tree.column("#0", width=200, stretch=True)
+        self.tree.column("status", width=60, anchor="center")
 
-        # 动态创建菜单按钮
-        self.menu_buttons = []
-        for idx, item in enumerate(menu_items):
-            btn = tk.Button(
-                self.menu_frame,
-                text=item["text"],
-                command=item["command"],
-                bg="#2d2d2d",  # 默认背景色
-                fg="white",  # 文字颜色
-                activebackground="#404040",  # 点击时背景色
-                activeforeground="white",
-                borderwidth=0,
-                anchor="w",
-                padx=20,
-                pady=15,
-                width=15
-            )
-            btn.pack(fill=tk.X, pady=(10 if idx == 0 else 0))
-            self.menu_buttons.append(btn)
+        # 添加示例数据
+        self.add_demo_data()
 
-    def _create_content_area(self):
-        """创建右侧内容区域"""
-        self.content_frame = tk.Frame(self, bg="white")
-        self.content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        # 绑定点击事件
+        self.tree.bind("<Button-1>", self.on_click)
 
-        # 默认显示状态页
-        self.current_content = None
-        self.show_status()
+        # 使用grid布局，可以后续灵活布局其他组件
+        self.tree.grid(row=0, column=0, sticky="nsew")
 
-    # 以下是菜单功能实现示例 ------------------------------
-    def _clear_content(self):
-        """清空内容区域"""
-        if self.current_content:
-            self.current_content.destroy()
+        # 配置窗口的grid布局管理
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
 
-    def show_status(self):
-        """显示状态页面"""
-        self._clear_content()
-        self.current_content = tk.Frame(self.content_frame, bg="white")
-        self.current_content.pack(fill=tk.BOTH, expand=True)
+    def set_style(self):
+        """设置字体大小和样式"""
+        style = ttk.Style()
 
-        # 示例内容
-        tk.Label(
-            self.current_content,
-            text="当前状态监控",
-            font=("Arial", 16),
-            bg="white"
-        ).pack(pady=20)
+        # 设置字体大小和树形结构文本的样式
+        style.configure("Treeview",
+                        font=("Arial", 12))  # 设置字体为Arial，大小为12
 
-    def show_energy(self):
-        """显示能量管理页面"""
-        self._clear_content()
-        self.current_content = tk.Frame(self.content_frame, bg="#f0f0f0")
-        self.current_content.pack(fill=tk.BOTH, expand=True)
+        # 设置表头字体和颜色
+        style.configure("Treeview.Heading",
+                        font=("Arial", 14, "bold"),  # 设置表头字体为加粗14号字体
+                        foreground="blue")  # 设置表头文字颜色为蓝色
 
-        # 示例内容
-        ttk.Label(
-            self.current_content,
-            text="能量管理系统",
-            font=("Arial", 16)
-        ).pack(pady=20)
-        ttk.Progressbar(
-            self.current_content,
-            length=200,
-            mode="determinate",
-            value=45
-        ).pack()
+    def add_demo_data(self):
+        """添加测试数据，展示文档结构的树形层级"""
+        chapter1 = self.tree.insert("", "end", text="第一章 引言", values=(UNCHECKED,))
+        self.tree.insert(chapter1, "end", text="1.1 研究背景", values=(UNCHECKED,))
+        sub_section = self.tree.insert(chapter1, "end", text="1.2 研究目的", values=(UNCHECKED,))
+        self.tree.insert(sub_section, "end", text="1.2.1 子目标1", values=(UNCHECKED,))
+        self.tree.insert(sub_section, "end", text="1.2.2 子目标2", values=(UNCHECKED,))
 
-    def show_money(self):
-        """显示金币统计页面"""
-        self._clear_content()
-        self.current_content = tk.Frame(self.content_frame, bg="#f0f0f0")
-        self.current_content.pack(fill=tk.BOTH, expand=True)
+        chapter2 = self.tree.insert("", "end", text="第二章 方法", values=(UNCHECKED,))
+        self.tree.insert(chapter2, "end", text="2.1 实验设计", values=(UNCHECKED,))
 
-        # 示例表格
-        columns = ("时间", "类型", "金额")
-        tree = ttk.Treeview(
-            self.current_content,
-            columns=columns,
-            show="headings"
-        )
-        for col in columns:
-            tree.heading(col, text=col)
-        tree.pack(fill=tk.BOTH, expand=True)
+    def on_click(self, event):
+        """处理点击事件，切换选中与未选中状态"""
+        region = self.tree.identify("region", event.x, event.y)
+        column = self.tree.identify_column(event.x)
+        item = self.tree.identify_row(event.y)
 
-    def show_settings(self):
-        """显示设置页面"""
-        self._clear_content()
-        self.current_content = tk.Frame(self.content_frame, bg="white")
-        self.current_content.pack(fill=tk.BOTH, expand=True)
+        # 检查点击的是有效的项
+        if item:
+            current_value = self.tree.item(item, "values")[0]
+            new_value = CHECKED if current_value == UNCHECKED else UNCHECKED
+            self.tree.item(item, values=(new_value,))
 
-        # 示例设置项
-        ttk.Checkbutton(
-            self.current_content,
-            text="自动保存设置"
-        ).pack(pady=10, anchor="w")
+            # 判断是否是父节点，如果是父节点，更新所有子节点状态
+            if self.tree.get_children(item):
+                self.update_children_state(item, new_value)
+                self.update_parent_state(item)
+
+            # 输出状态变更日志
+            node_type = "父节点" if self.tree.get_children(item) else "子节点"
+            print(f"{node_type} [{self.tree.item(item, 'text')}] 状态变为 {new_value}")
+
+    def update_children_state(self, parent, state):
+        """递归更新所有子节点的状态"""
+        for child in self.tree.get_children(parent):
+            self.tree.item(child, values=(state,))
+            # 如果子节点有子节点，递归更新
+            if self.tree.get_children(child):
+                self.update_children_state(child, state)
+
+    def update_parent_state(self, parent):
+        """检查并更新父节点状态，若所有子节点都选中，父节点选中"""
+        children = self.tree.get_children(parent)
+        if all(self.tree.item(child, "values")[0] == CHECKED for child in children):
+            self.tree.item(parent, values=(CHECKED,))
+        else:
+            self.tree.item(parent, values=(UNCHECKED,))
 
 
 if __name__ == "__main__":
-    app = Tools()
-    app.mainloop()
+    root = tk.Tk()
+    app = NavigationPanel(root)
+    root.geometry("300x400")
+    root.mainloop()

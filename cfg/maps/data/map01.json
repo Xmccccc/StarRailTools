@@ -1,0 +1,134 @@
+{
+     "0101": {
+          "name_zh": "\u4e3b\u63a7\u8231\u6bb5",
+          "parent_map_name_zh": "\u7a7a\u95f4\u7ad9\u9ed1\u5854",
+          "id": "0101",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": null
+     },
+     "0102": {
+          "name_zh": "\u57fa\u5ea7\u8231\u6bb5",
+          "parent_map_name_zh": "\u7a7a\u95f4\u7ad9\u9ed1\u5854",
+          "id": "0102",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": null
+     },
+     "0103": {
+          "name_zh": "\u6536\u5bb9\u8231\u6bb5",
+          "parent_map_name_zh": "\u7a7a\u95f4\u7ad9\u9ed1\u5854",
+          "id": "0103",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "-1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0104": {
+          "name_zh": "\u652f\u63f4\u8231\u6bb5",
+          "parent_map_name_zh": "\u7a7a\u95f4\u7ad9\u9ed1\u5854",
+          "id": "0104",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     },
+     "0105": {
+          "name_zh": "\u7981\u95ed\u8231\u6bb5",
+          "parent_map_name_zh": "\u7a7a\u95f4\u7ad9\u9ed1\u5854",
+          "id": "0105",
+          "level": 2,
+          "pictures": null,
+          "monster": true,
+          "book": true,
+          "puzzle": true,
+          "treasure": true,
+          "sub_maps_id": null,
+          "layer": {
+               "3": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "2": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               },
+               "1": {
+                    "pictures": null,
+                    "monster": false,
+                    "book": true,
+                    "puzzle": true,
+                    "treasure": true,
+                    "sub_maps_id": null
+               }
+          }
+     }
+}

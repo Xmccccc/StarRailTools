@@ -1,12 +1,17 @@
 import os
+import time
 import json
 import tkinter as tk
+from tkinter import ttk
+
+import utils
 
 
 class FrameBase(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        self.text = self.parent.text
         self.name = 'none'  # 进入此界面的按钮文本
 
         self.font = self.parent.cfg["font"]
@@ -20,7 +25,7 @@ class FrameTools(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["function"]  # 进入此界面的按钮文本
+        self.name = self.text["function"]  # 进入此界面的按钮文本
         self.buttons = []
 
         # button info
@@ -50,73 +55,72 @@ class FrameTools(FrameBase):
             btn.grid(row=row, column=col, padx=20, pady=20)
             self.buttons.append(btn)
 
-        # label
-        # label01 = tk.Label(self, text="功能界面", font=('Georgia', 14))
-        # label01.grid()
-
 
 class FrameTheme(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["theme"]  # 进入此界面的按钮文本
+        self.name = self.text["theme"]  # 进入此界面的按钮文本
 
         # button
         button01 = tk.Button(self, text="主题")
         button01.pack()
-
-        # label
-        label01 = tk.Label(self, text="主题界面")
-        label01.pack()
 
 
 class FrameSetting(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["settings"]  # 进入此界面的按钮文本
+        self.name = self.text["settings"]  # 进入此界面的按钮文本
 
         # button
         button01 = tk.Button(self, text="设置")
         button01.pack()
-
-        # label
-        label01 = tk.Label(self, text="设置界面")
-        label01.pack()
 
 
 class FrameAbout(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["about"]  # 进入此界面的按钮文本
+        self.name = self.text["about"]  # 进入此界面的按钮文本
 
         # button
         button01 = tk.Button(self, text="关于")
         button01.pack()
-
-        # label
-        label01 = tk.Label(self, text="关于界面")
-        label01.pack()
 
 
 class FrameDig(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["dig"]  # 锄地
+        self.name = self.text["dig"]  # 锄地
+        self.dig_maps = []
+        self.select_maps = []
+        # self.parent.intf_mgr.maps
 
         # label
-        tk.Label(self, text="地图选择", font=('Georgia', 14)).grid(row=0, column=0, padx=20, pady=10)
+        tk.Label(self, text=self.text['map_choice'], font=(self.font, self.font_size)).pack(side=tk.LEFT)
+
+        # treeview
+        tree = ttk.Treeview(
+            self.parent,
+            columns='selected',
+            show="tree headings",
+            selectmode="none"
+        )
+
         # button
-        tk.Button(self, text="锄地").grid(row=1, column=0, padx=20, pady=10)
+        tk.Button(self, text=self.text['start'], command=self.parent.launch_scripts(None, self.dig()), ).pack(side=tk.LEFT)
+
+    def dig(self):
+        pass
 
 
 class FrameStory(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["story"]  # 剧情
+        self.name = self.text["story"]  # 剧情
 
         # button info
 
@@ -128,21 +132,79 @@ class FrameSimulatedUniverse(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["simulated_universe"]  # 模拟宇宙
+        self.name = self.text["simulated_universe"]  # 模拟宇宙
 
         # button info
 
-        tk.Button(self, text=self.name, command=lambda: print(self.name),
-                  width=8, height=1, font=('Georgia', 14)).grid()
+        # button
+        button01 = tk.Button(self, text="模拟宇宙")
+        button01.pack()
 
 
 class FrameForgottenHall(FrameBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.name = self.parent.text["forgotten_hall"]  # 忘却之庭
+        self.name = self.text["forgotten_hall"]  # 忘却之庭
 
         # button info
 
-        tk.Button(self, text=self.name, command=lambda: print(self.name),
-                  width=8, height=1, font=('Georgia', 14)).grid()
+        # button
+        button01 = tk.Button(self, text="忘却之庭")
+        button01.pack()
+
+
+class FrameRunningInfo(FrameBase):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.name = self.text["running_info"]
+
+        self.task = {}  # 任务列表
+        self.labels = []  # 运行信息显示
+        self.run_info = []
+        self.info_num = self.parent.cfg["info_num"]
+        for i in range(self.info_num):
+            label = tk.Label(
+                self,
+                text=f"text_{i}"
+
+            )
+            label.pack()
+            self.run_info.append(label.cget('text'))
+            self.labels.append(label)
+
+    def minimize_launch(self):
+        while not self.parent.character.running:
+            self.parent.character.running = utils.is_program_running(self.text['exe_name'])
+            if self.parent.character.running:
+                self.save_log(self.text['running'])
+            else:
+                self.save_log(self.text['no_running'])
+                utils.launch_program(self.text['paths']['exe'])
+                time.sleep(8)
+        self.save_log(self.text['launch_S'])
+
+        while not self.parent.character.minimize:
+            self.save_log(self.text['minimize_S'])
+            self.parent.character.minimize = utils.minimize_window(self.text['exe_name'])
+        self.save_log(self.text['minimize_S'])
+
+    def save_log(self, text):
+        current_time = time.strftime("%H:%M:%S", time.localtime())
+        text = f"[{current_time}]\t{text}"
+
+        utils.text_save(f'logs\\{self.parent.log_file_name}.txt', text)
+        self.renew_info(text)
+
+    def renew_info(self, text):
+        self.run_info.append(text)
+        self.run_info.pop(0)
+        for i in range(self.info_num):
+            self.labels[i].config(text=self.run_info[i])
+
+    # def backend_launch(program_exe, exe_path, window_title):
+    #     running = game_utils.is_program_running(program_exe)
+    #     if not running:
+    #         game_utils.launch_program(exe_path)
+    #         running = game_utils.is_program_running(program_exe)
