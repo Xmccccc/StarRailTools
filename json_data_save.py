@@ -48,6 +48,8 @@ zh = {"function": '功能',
       "about": '关于',
 
       "map_choice": '地图选择',
+      "status": '状态',
+      "selected_all": '选择全部',
       "start": '启动',
 
       "running_info": "运行信息",

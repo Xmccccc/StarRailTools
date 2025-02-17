@@ -62,8 +62,8 @@ class Tools(tk.Tk):
     def show_frame(self, fc):  # fc: frame class
         if self.current_frame:
             self.current_frame.pack_forget()
-
         self.current_frame = self.frames[fc]
+        self.current_frame.frame_load()
         self.current_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
     def check_cfg(self):
