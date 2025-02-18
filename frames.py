@@ -3,8 +3,7 @@ import time
 import json
 import tkinter as tk
 from tkinter import ttk
-
-import utils
+from functools import partial
 
 
 class FrameBase(tk.Frame):
@@ -103,6 +102,27 @@ class FrameAbout(FrameBase):
         # button
         button01 = tk.Button(self, text="关于")
         button01.pack()
+        button02 = tk.Button(self, text="box_hidden", command=self.box_hidden)
+        button02.pack()
+
+        button03 = tk.Button(self, text="box_draw1", command=partial(self.box_draw, 120, 120, 100, 100, 'blue', 2))
+        button03.pack()
+
+        button04 = tk.Button(self, text="box_draw2", command=lambda: self.box_draw(500, 500, 100, 100, 'black', 3))
+        button04.pack()
+
+        button05 = tk.Button(self, text="box_draw3", command=lambda: self.box_draw(200, 200, 120, 300, 'red', 1))
+        button05.pack()
+
+        button05 = tk.Button(self, text="box_draw4", command=lambda: self.parent.info_show.canvas_setting((10, 10, 100, 100), 'red', 1))
+        button05.pack()
+
+    # 测试用
+    def box_hidden(self):
+        self.parent.info_show.canvas_setting((120, 120, 0, 0), 'blue', 0)
+
+    def box_draw(self, x, y, width, height, border_color='red', border_width=1):
+        self.parent.info_show.canvas_setting((x, y, width, height), border_color, border_width)
 
 
 class FrameDig(FrameBase):
@@ -143,7 +163,7 @@ class FrameDig(FrameBase):
     def _labels_set(self):
         self.label = tk.Label(self, text=self.name,
                               bd=1, relief="ridge",
-                              font=(self.font, 20, 'bold'),)
+                              font=(self.font, 20, 'bold'), )
         # self.label.grid(row=0, column=0, padx=10, pady=5, fill='both')  # sticky="w"将文本靠左对齐
         self.label.grid(row=0, column=0, columnspan=2, padx=10, pady=5, sticky='nsew')  # sticky="w"将文本靠左对齐
         self.grid_rowconfigure(0, minsize=50, weight=0)
@@ -163,9 +183,9 @@ class FrameDig(FrameBase):
         self.tree.column("status", width=30, anchor="center")
 
         # 设置默认背景颜色
-        self.default_bg = self.tree.tag_configure("default", background="white", foreground='black')  # 默认
+        self.default_bg = self.tree.tag_configure("default", background="white", foreground='black')  # 默认  white
         self.hover_bg = self.tree.tag_configure("hover", background="#e0e0e0", foreground='black')  # 鼠标悬停
-        self.selected_bg = self.tree.tag_configure('selected', background='#A0A0A0', foreground='black')  # 选中
+        self.selected_bg = self.tree.tag_configure('selected', background='#8CB6F5', foreground='black')  # 选中
 
         self._tree_data_set()  # 数据配置
         self.tree.bind("<Motion>", self._on_mouse_move)  # 鼠标进入treeview事件
@@ -178,12 +198,9 @@ class FrameDig(FrameBase):
 
     def _tree_data_set(self):
         for main_map_name in self.dig_maps:
-            c1 = self.tree.insert('', 'end', text=main_map_name, values=[self.unselected, ], tags='default')
-
-            self.tree.tag_configure(main_map_name, background='white', foreground='black')  # black
+            c1 = self.tree.insert('', 'end', text=main_map_name, values=(self.unselected,), tags='default')
             for sub_map in self.dig_maps[main_map_name]:
-                self.tree.insert(c1, 'end', text=sub_map, values=[self.unselected, ], tags='default')
-                self.tree.tag_configure(sub_map, background='white', foreground='black')  # white
+                self.tree.insert(c1, 'end', text=sub_map, values=(self.unselected,), tags='default')
 
     def _on_mouse_move(self, event):
         item = self.tree.identify_row(event.y)
@@ -239,7 +256,7 @@ class FrameDig(FrameBase):
         return value
 
     def _status_change(self, item, value):
-        self.tree.item(item, values=(value, ))
+        self.tree.item(item, values=(value,))
         self._color_change(item, value)
 
     def _selected_check(self, item, value):
@@ -270,7 +287,7 @@ class FrameDig(FrameBase):
         # button info
         buttons_info = [
             (self._selected_all, self.text['selected_all'], 3, 0),
-            (self.dig, self.text['start'], 3, 1),
+            (self._running, self.text['start'], 3, 1),
         ]
 
         # button
@@ -292,15 +309,29 @@ class FrameDig(FrameBase):
             self.grid_columnconfigure(col, minsize=100, weight=1)
             self.buttons.append(btn)
 
-    def _selected_all(self):
+    def _selected_all(self):  # 勾选所有地图
+        for item in self.tree.get_children():
+            self._status_change(item, self.selected)
+            self._selected_check(item, self.selected)
 
-        pass
-
-    def dig(self):
+    def _running(self):  # 运行
         self._get_selected_maps()
+        self.parent.task_list.append('dig')
+        self.parent.task_info['dig'] = self.select_maps
+        self.parent.start_game()
 
     def _get_selected_maps(self):
-        pass
+        """
+        只寻找了两层 - 后续再改
+        :return:
+        """
+        self.select_maps = {}
+        for item in self.tree.get_children():
+            key = self.tree.item(item, 'text')
+            self.select_maps[key] = []
+            for child in self.tree.get_children(item):
+                value = self.tree.item(child, 'text')
+                self.select_maps[key].append(value)
 
     def _get_dig_maps(self):
         star_orbital_map = self.parent.intf_mgr.star_orbital_map
@@ -367,61 +398,37 @@ class FrameForgottenHall(FrameBase):
         button01.pack()
 
 
-class FrameRunningInfo(FrameBase):
+class ToplevelWindow:
     def __init__(self, parent):
-        super().__init__(parent)
         self.parent = parent
-        self.name = self.text["running_info"]
-
-        self.task = {}  # 任务列表
-        self.labels = []  # 运行信息显示label
+        self.top_window = tk.Toplevel(parent)
+        self.name = self.parent.text["running_info"]
+        self.top_window.title(self.name)
+        self.top_window.geometry(f'+0+0')  # 设置新窗口的位置在屏幕左上角
+        self.top_window.update()  # 更新窗口以便更好地显示
+        # info
+        self.task_list = self.parent.task_list
+        self.task_info = self.parent.task_info
+        self.show_labels = []  # 运行信息显示label
         self.run_info = []  # 运行信息列表 - 弃掉旧信息
-        self.info_num = self.parent.cfg["info_num"]  # 信息显示条数
+        self.info_num = self.parent.cfg["info_show_num"]  # 信息显示条数
+        self.widget_create()
 
-    def frame_load(self):
-        super().frame_load()  # 调用父类方法
-
-        # show info labels
+    def widget_create(self):
         for i in range(self.info_num):
             label = tk.Label(
-                self,
-                text=f"text_{i}"
+                self.top_window,
+                text=f"当前状态:  default_text_{i+1}"
             )
-            label.pack()
+            label.grid(row=i+1, column=0, padx=0, pady=0, sticky='nsew')
             self.run_info.append(label.cget('text'))
-            self.labels.append(label)
+            self.show_labels.append(label)
 
-    def minimize_launch(self):
-        while not self.parent.character.running:
-            self.parent.character.running = utils.is_program_running(self.text['exe_name'])
-            if self.parent.character.running:
-                self.save_log(self.text['running'])
-            else:
-                self.save_log(self.text['no_running'])
-                utils.launch_program(self.text['paths']['exe'])
-                time.sleep(8)
-        self.save_log(self.text['launch_S'])
+    def renew_info(self):
+        for ind, text in enumerate(self.parent.log_info):
+            self.show_labels[ind]['text'] = text
+        self.parent.after(100, self.renew_info)  # 每100毫秒更新一次
 
-        while not self.parent.character.minimize:
-            self.save_log(self.text['minimize_S'])
-            self.parent.character.minimize = utils.minimize_window(self.text['exe_name'])
-        self.save_log(self.text['minimize_S'])
 
-    def save_log(self, text):
-        current_time = time.strftime("%H:%M:%S", time.localtime())
-        text = f"[{current_time}]\t{text}"
-
-        utils.text_save(f'logs\\{self.parent.log_file_name}.txt', text)
-        self.renew_info(text)
-
-    def renew_info(self, text):
-        self.run_info.append(text)
-        self.run_info.pop(0)
-        for i in range(self.info_num):
-            self.labels[i].config(text=self.run_info[i])
-
-    # def backend_launch(program_exe, exe_path, window_title):
-    #     running = game_utils.is_program_running(program_exe)
-    #     if not running:
-    #         game_utils.launch_program(exe_path)
-    #         running = game_utils.is_program_running(program_exe)
+def end_sign():
+    pass

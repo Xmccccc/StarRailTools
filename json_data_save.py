@@ -1,15 +1,25 @@
+import time
+
+import cv2
+
+import tools
 import utils
+# import matplotlib.pyplot as plt
 
 config = {"path": r'cfg\config.json',
           # 数据加载
-          "paths": {"ico": r'cfg\appicon.ico',
+          "paths": {"ico": r'cfg\img\appicon.ico',
                     "zh": r'cfg\language\zh.json',
                     "en": r'cfg\language\en.json',
+                    "intf": r'cfg\intf.json',
+                    "intf_element": r'cfg\intf_element.json',
+                    "img": r'cfg\img',
+                    "intf_img_common_path": r'cfg\img\zh\intf',
+                    "exe": r'C:\Program Files\miHoYo Launcher\games\Star Rail Game\StarRail.exe',
+
                     "maps_data": r'cfg\maps\data',
                     "star_orbital_map": r'cfg\maps\data\star_orbital_map.json',  # 星轨航图
                     "star_rail_map": r'cfg\maps\data\star_rail_map.json',  # 星穹列车
-                    "map_pictures": r'cfg\maps\pictures',
-                    "exe": r'C:\Program Files\miHoYo Launcher\games\Star Rail Game\StarRail.exe',
                     },
 
           "exe_name": 'StarRail.exe',
@@ -29,9 +39,30 @@ config = {"path": r'cfg\config.json',
 
           # 运行设置
           "running_in_front": True,  # 是否前台运行
-          "info_num": 6,  # 信息显示数量
+          "log_info_num": 6,  # 信息显示数量
 
           }
+
+task = {'dig': 'all',
+        "story": 'all',  # 剧情
+        "simulated_universe": 'all',  # 模拟宇宙
+        "forgotten_hall": 'all',  # 忘却之庭
+
+        }
+
+# 定位图片
+position_img = {"launch": r'cfg\img\icon\game_launch.png',  # 开始游戏界面
+                "stop": r'cfg\img\icon\.png',  # esc暂停、功能选择界面
+                "star_orbital_map": r'cfg\img\icon\star_orbital_map.png',  # 星轨航图界面
+                "star_rail_map": r'cfg\img\icon\star_orbital_map.png',  # 星穹列车界面
+
+                }
+
+# 图标图片
+ico_img = {}
+
+# 日常图片？ - 放在图标？
+daily_img = {}
 
 zh = {"function": '功能',
       "dig": '锄地',
@@ -50,16 +81,38 @@ zh = {"function": '功能',
       "map_choice": '地图选择',
       "status": '状态',
       "selected_all": '选择全部',
-      "start": '启动',
 
       "running_info": "运行信息",
 
-      "running": '程序运行中...',
-      "no_running": '程序未启动...',
-      "launch_S": '程序启动成功...',
-      "launch_F": '程序启动失败...',
-      "minimize_Run": '程序最小化中...',
-      "minimize_S": '程序最小化成功...',
+      "program": '程序',
+      "game": '游戏',
+      "screenshot": '截图',
+      "window": '窗口',
+      "window_info": '窗口信息',
+      "loc": '位置',
+      "interface": '界面',
+
+      "start": '启动',
+      "no_start": '未启动',
+      "starting": '启动中',
+      "started": '已启动',
+      "success": '成功',
+      "fail": '失败',
+      "minimizing": '最小化中',
+      "minimized": '已最小化',
+      "get": '获取',
+      "getting": '获取中',
+      "got": '获取成功',
+      "match": '匹配',
+      "matching": '匹配中',
+      "matched": '匹配完成',
+      "mark": '标记',
+      "marking": '标记中',
+      "marked": '标记完成',
+      "recognize": '识别',
+      "recognizing": '识别中',
+      "recognized": '识别完成',
+      "front": '最前',
 
       }
 
@@ -88,1033 +141,216 @@ en = {"function": 'function',
 
       }
 
-# 其他界面
+intf = [{'available': True,
+         'independent': True,
+         'next_intf': [],
+         'id': '0000',
+         'name': 'launch',  # 启动界面
+         'sign_img_id': ['0000', ],
+
+         },
+
+        {'available': True,
+         'independent': True,
+         'next_intf': [],
+         'id': '0001',
+         'name': 'phone',  # 手机呼出界面
+         'sign_img_id': ['0001', ],
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0002',
+         'name': 'store01',  # 商店-推荐界面
+         'sign_img_id': ['0002', ],
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0003',
+         'name': 'store02',  # 商店-星芒兑换界面
+         'sign_img_id': ['0003', ],
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0004',
+         'name': 'store03',  # 商店-余烬兑换界面
+         'sign_img_id': ['0004', ],
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0005',
+         'name': 'store04',  # 商店-协议商店界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0005.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0006',
+         'name': 'store05',  # 商店-捕获梦华界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0006.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0007',
+         'name': 'store06',  # 商店-星琼购买界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0007.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0008',
+         'name': 'friends01',  # 好友-我的好友界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0008.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0009',
+         'name': 'friends02',  # 好友-萍水相逢界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0009.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0010',
+         'name': 'entrust01',  # 委托-专属材料界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0010.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0011',
+         'name': 'entrust02',  # 委托-经验材料/信用点界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0011.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0012',
+         'name': 'entrust02',  # 委托-合成材料界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0012.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0012',
+         'name': 'entrust02',  # 委托-合成材料界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0012.png',
+
+         },
+
+        {'available': True,
+         'independent': True,
+         'next_intf': [],
+         'id': '0013',
+         'name': 'entrust03',  # 委托-委托报告界面 - 领取委托奖励界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0013.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0014',
+         'name': 'navigation01',  # 导航-星轨航图界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0014.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0015',
+         'name': 'navigation02',  # 导航-空间站黑塔-主控舱段界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0015.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0016',
+         'name': 'navigation03',  # 导航-空间站黑塔-基座舱段界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0016.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0016',
+         'name': 'navigation04',  # 导航-空间站黑塔-收容舱段2层界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0017.png',
+
+         },
+
+        {'available': True,
+         'independent': False,
+         'next_intf': [],
+         'id': '0017',
+         'name': 'navigation05',  # 导航-空间站黑塔-收容舱段1层界面
+         'sign_img_id': r'cfg\img\zh\intf\intf0017.png',
+
+         },
+
+        ]
 
 
-# 导航界面  星轨航图
-star_orbital_map = {"01": {"name_zh": '空间站黑塔',
-                           "parent_map_name_zh": '星轨航图',
-                           "id": '01',
-                           "level": 1,
-                           "pictures": None,  # 图片名字字典
-                           "monster": True,  # 怪物
-                           "book": True,  # 阅读物收集
-                           "puzzle": True,  # 解密
-                           "treasure": True,  # 宝箱
-                           "sub_maps_id": ['0101', '0102', '0103', '0104', '0105'],
-                           "layer": None,
-                           },
-
-                    "02": {"name_zh": '雅利洛',
-                           "parent_map_name_zh": '星轨航图',
-                           "id": '02',
-                           "level": 1,
-                           "pictures": None,
-                           "monster": True,  # 怪物
-                           "book": True,  # 阅读物收集
-                           "puzzle": True,  # 解密
-                           "treasure": True,  # 宝箱
-                           "sub_maps_id": ['0201', '0202', '0203', '0204', '0205', '0206',
-                                           '0207', '0208', '0209', '0210', '0211', '0212'],
-                           "layer": None,
-                           },
-
-                    "03": {"name_zh": '仙舟罗浮',
-                           "parent_map_name_zh": '星轨航图',
-                           "id": '03',
-                           "level": 1,
-                           "pictures": None,
-                           "monster": True,  # 怪物
-                           "book": True,  # 阅读物收集
-                           "puzzle": True,  # 解密
-                           "treasure": True,  # 宝箱
-                           "sub_maps_id": ['0301', '0302', '0303', '0304', '0305', '0306',
-                                           '0307', '0308', '0309', '0310', '0311', '0312'],
-                           "layer": None,
-                           },
-
-                    "04": {"name_zh": '匹诺康尼',
-                           "parent_map_name_zh": '星轨航图',
-                           "id": '04',
-                           "level": 1,
-                           "pictures": None,
-                           "monster": True,  # 怪物
-                           "book": True,  # 阅读物收集
-                           "puzzle": True,  # 解密
-                           "treasure": True,  # 宝箱
-                           "sub_maps_id": ['0401', '0402', '0403', '0404', '0405', '0406',
-                                           '0407', '0408', '0409', '0410', '0411', '0412'],
-                           "layer": None,
-                           },
-
-                    }
-
-star_rail_map = {"0001": {"name_zh": '派对车厢',
-                          "parent_map_name_zh": '星穹列车',
-                          "id": '0001',
-                          "level": 2,
-                          "pictures": None,
-                          "monster": False,  # 怪物
-                          "book": True,  # 阅读物收集
-                          "puzzle": True,  # 解密
-                          "treasure": True,  # 宝箱
-                          "sub_maps_id": None,
-                          "layer": {"2": {"pictures": None,
-                                          "monster": False,
-                                          "book": True,
-                                          "puzzle": True,
-                                          "treasure": True,
-                                          "sub_maps_id": None, },
-
-                                    "1": {"pictures": None,
-                                          "monster": False,
-                                          "book": True,
-                                          "puzzle": True,
-                                          "treasure": True,
-                                          "sub_maps_id": None, },
-
-                                    },
+intf_element = {'0001': [{'element_id': '01_00',
+                          'element_name': 'esc',
+                          'element_type': 'key',
+                          'target_intf': 'last_independent_intf',  # last_independent_intf  last_intf  返回上一独立界面还是上一界面
+                          'img_id': None,
+                          'offset': None,
                           },
 
-                 "0002": {"name_zh": '观景车厢',
-                          "parent_map_name_zh": '星穹列车',
-                          "id": '0002',
-                          "level": 2,
-                          "pictures": None,
-                          "monster": False,  # 怪物
-                          "book": True,  # 阅读物收集
-                          "puzzle": True,  # 解密
-                          "treasure": True,  # 宝箱
-                          "sub_maps_id": None,
-                          "layer": None,
+                         {'element_id': '01_01',
+                          'element_name': 'friends',
+                          'element_type': 'button',
+                          'target_intf': 'friends',
+                          'img_id': [r'cfg\img\zh\intf\intf01_01.png', ],
+                          'offset': (0, 0),
                           },
 
-                 "0003": {"name_zh": '客房车厢',
-                          "parent_map_name_zh": '星穹列车',
-                          "id": '0003',
-                          "level": 2,
-                          "pictures": None,
-                          "monster": False,  # 怪物
-                          "book": True,  # 阅读物收集
-                          "puzzle": True,  # 解密
-                          "treasure": True,  # 宝箱
-                          "sub_maps_id": None,
-                          "layer": None,
+                         {'element_id': '01_02',
+                          'element_name': 'friends',
+                          'element_type': 'button',
+                          'target_intf': 'friends',
+                          'img_id': [r'cfg\img\zh\intf\intf01_01.png', ],
+                          'offset': (0, 0),
                           },
 
-                 }
+                         ],
+                }
 
-map01 = {"0101": {"name_zh": '主控舱段',
-                  "parent_map_name_zh": '空间站黑塔',
-                  "id": '0101',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0102": {"name_zh": '基座舱段',
-                  "parent_map_name_zh": '空间站黑塔',
-                  "id": '0102',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0103": {"name_zh": '收容舱段',
-                  "parent_map_name_zh": '空间站黑塔',
-                  "id": '0103',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "-1": {"pictures": None,
-                                   "monster": False,
-                                   "book": True,
-                                   "puzzle": True,
-                                   "treasure": True,
-                                   "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0104": {"name_zh": '支援舱段',
-                  "parent_map_name_zh": '空间站黑塔',
-                  "id": '0104',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0105": {"name_zh": '禁闭舱段',
-                  "parent_map_name_zh": '空间站黑塔',
-                  "id": '0105',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"3": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         }
-
-map02 = {"0201": {"name_zh": '行政区',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0201',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "-1": {"pictures": None,
-                                   "monster": False,
-                                   "book": True,
-                                   "puzzle": True,
-                                   "treasure": True,
-                                   "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0202": {"name_zh": '城郊雪原',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0202',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0203": {"name_zh": '边缘通路',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0203',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0204": {"name_zh": '铁卫禁区',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0204',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0205": {"name_zh": '残响回廊',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0205',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0206": {"name_zh": '永冬岭',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0206',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0207": {"name_zh": '造物之柱',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0207',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0208": {"name_zh": '旧武器试验场',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0208',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0209": {"name_zh": '磐岩镇',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0209',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0210": {"name_zh": '大矿区',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0210',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0211": {"name_zh": '铆钉镇',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0211',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0212": {"name_zh": '机械聚落',
-                  "parent_map_name_zh": '雅利洛',
-                  "id": '0212',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         }
-
-map03 = {"0301": {"name_zh": '星槎海中枢',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0301',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0302": {"name_zh": '流云渡',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0302',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0303": {"name_zh": '迴星港',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0303',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0304": {"name_zh": '长乐天',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0304',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0305": {"name_zh": '金人巷',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0305',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0306": {"name_zh": '太卜司',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0306',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0307": {"name_zh": '工造司',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0307',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0308": {"name_zh": '绥园',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0308',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0309": {"name_zh": '丹鼎司',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0309',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0310": {"name_zh": '鳞渊境',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0310',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0311": {"name_zh": '幽囚狱',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0311',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "-1": {"pictures": None,
-                                   "monster": False,
-                                   "book": True,
-                                   "puzzle": True,
-                                   "treasure": True,
-                                   "sub_maps_id": None, },
-
-                            "-2": {"pictures": None,
-                                   "monster": False,
-                                   "book": True,
-                                   "puzzle": True,
-                                   "treasure": True,
-                                   "sub_maps_id": None, },
-
-                            "-3": {"pictures": None,
-                                   "monster": False,
-                                   "book": True,
-                                   "puzzle": True,
-                                   "treasure": True,
-                                   "sub_maps_id": None, },
-
-                            "-4": {"pictures": None,
-                                   "monster": False,
-                                   "book": True,
-                                   "puzzle": True,
-                                   "treasure": True,
-                                   "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0312": {"name_zh": '竞锋舰',
-                  "parent_map_name_zh": '仙舟罗浮',
-                  "id": '0312',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"3": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         }
-
-map04 = {"0401": {"name_zh": '白日梦酒店现实',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0401',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"3": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0402": {"name_zh": '黄金的时刻',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0402',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"3": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0403": {"name_zh": '筑梦边境',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0403',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0404": {"name_zh": '稚子的梦',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0404',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0405": {"name_zh": '白日梦酒店梦境',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0405',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"3": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0406": {"name_zh": '朝露公馆',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0406',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0407": {"name_zh": '克劳可影视乐园',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0407',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0408": {"name_zh": '流梦礁',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0408',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0409": {"name_zh": '苏乐达热砂海选会场',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0409',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0410": {"name_zh": '匹诺康尼大剧院',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0410',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": None,
-                  },
-
-         "0411": {"name_zh": '晖长石号',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0411',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "-1": {"pictures": None,
-                                   "monster": False,
-                                   "book": True,
-                                   "puzzle": True,
-                                   "treasure": True,
-                                   "sub_maps_id": None, },
-
-                            },
-                  },
-
-         "0412": {"name_zh": '匹诺康尼折纸大学学院',
-                  "parent_map_name_zh": '匹诺康尼',
-                  "id": '0412',
-                  "level": 2,
-                  "pictures": None,
-                  "monster": True,  # 怪物
-                  "book": True,  # 阅读物收集
-                  "puzzle": True,  # 解密
-                  "treasure": True,  # 宝箱
-                  "sub_maps_id": None,
-                  "layer": {"3": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "2": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            "1": {"pictures": None,
-                                  "monster": False,
-                                  "book": True,
-                                  "puzzle": True,
-                                  "treasure": True,
-                                  "sub_maps_id": None, },
-
-                            },
-                  },
-
-         }
 
 
 def end_sign():
@@ -1123,14 +359,10 @@ def end_sign():
 
 if __name__ == '__main__':
     files_info = [(config, r'cfg\config.json'),
+                  (task, r'user_cfg\task\task.json'),
                   (zh, r'cfg\language\zh.json'),
                   (en, r'cfg\language\en.json'),
-                  (star_orbital_map, r'cfg\maps\data\star_orbital_map.json'),
-                  (star_rail_map, r'cfg\maps\data\star_rail_map.json'),
-                  (map01, r'cfg\maps\data\map01.json'),
-                  (map02, r'cfg\maps\data\map02.json'),
-                  (map03, r'cfg\maps\data\map03.json'),
-                  (map04, r'cfg\maps\data\map04.json'),
+                  (intf, r'cfg\intf.json'),
 
                   ]
 
@@ -1140,3 +372,40 @@ if __name__ == '__main__':
     # for key in star_orbital_map:
     #     print(key)
     #     print(type(key))
+
+    # 尝试运行
+    # if not utils.is_running(config['exe_name']):
+    #     utils.program_launch(config['paths']['exe'])
+    #     time.sleep(5)
+    # window = utils.get_window(config['window_title'])
+    # if not window:
+    #     print('窗口获取失败')
+    #     window_rect = None
+    #     input()
+    # else:
+    #     print(f'window:\n{window}')
+    #     window.activate()
+    #     window_rect = utils.get_window_rect(window)
+    #
+    # if not window_rect:
+    #     print('窗口信息获取失败')
+    #     img = None
+    #     input()
+    # else:
+    #     print(f'window_rect:\n{window_rect}')
+    #     img = utils.capture_window(window_rect)
+    #
+    # while True:
+    #     image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    #     plt.imshow(image_rgb)
+    #     plt.axis('off')  # 隐藏坐标轴
+    #     plt.show()
+    #     key = cv2.waitKey(0)  # 按下任意按键后继续执行
+    #     if key == 27:  # 如果按下 'esc' 键
+    #         break
+    #     plt.close()
+    #     # plt.close('all')
+    #     time.sleep(1)
+    #     img = utils.capture_window(window_rect)
+
+    pass

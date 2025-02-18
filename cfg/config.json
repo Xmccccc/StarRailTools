@@ -1,13 +1,15 @@
 {
      "path": "cfg\\config.json",
      "paths": {
-          "ico": "cfg\\appicon.ico",
+          "ico": "cfg\\pictures\\appicon.ico",
           "zh": "cfg\\language\\zh.json",
           "en": "cfg\\language\\en.json",
+          "intf": "cfg\\intf.json",
+          "intf_element": "cfg\\intf_element.json",
           "maps_data": "cfg\\maps\\data",
           "star_orbital_map": "cfg\\maps\\data\\star_orbital_map.json",
           "star_rail_map": "cfg\\maps\\data\\star_rail_map.json",
-          "map_pictures": "cfg\\maps\\pictures",
+          "pictures": "cfg\\pictures",
           "exe": "C:\\Program Files\\miHoYo Launcher\\games\\Star Rail Game\\StarRail.exe"
      },
      "exe_name": "StarRail.exe",
@@ -23,5 +25,5 @@
      "font": "\u5fae\u8f6f\u96c5\u9ed1",
      "font_size": 14,
      "running_in_front": true,
-     "info_num": 6
+     "log_info_num": 6
 }

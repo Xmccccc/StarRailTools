@@ -1,0 +1,14 @@
+[
+     {
+          "available": true,
+          "id": "00",
+          "name": "launch",
+          "sign_img_path": "cfg\\pictures\\zh\\intf\\intf00.png"
+     },
+     {
+          "available": true,
+          "id": "01",
+          "name": "phone",
+          "sign_img_path": "cfg\\pictures\\zh\\intf\\intf01.png"
+     }
+]
